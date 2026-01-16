@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinPilot - AI Personal Finance Manager</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/responsive.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="container">
+                <div class="logo">
+                    <h1>💰 FinPilot</h1>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="#dashboard" onclick="navigate('dashboard')">Dashboard</a></li>
+                    <li><a href="#expenses" onclick="navigate('expenses')">Expenses</a></li>
+                    <li><a href="#budgets" onclick="navigate('budgets')">Budgets</a></li>
+                    <li><a href="#savings" onclick="navigate('savings')">Savings</a></li>
+                    <li><a href="#advisor" onclick="navigate('advisor')">AI Advisor</a></li>
+                    <li><a href="#profile" onclick="navigate('profile')">Profile</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="container main-content">
+            <!-- Auth Page -->
+            <div id="auth-page" class="page active">
+                <div class="auth-container">
+                    <div class="auth-form">
+                        <h2>Welcome to FinPilot</h2>
+                        <p>Your AI-Powered Personal Finance Manager</p>
+                        
+                        <div class="form-tabs">
+                            <button class="tab-btn active" onclick="switchAuthTab('login')">Login</button>
+                            <button class="tab-btn" onclick="switchAuthTab('register')">Register</button>
+                        </div>
+
+                        <!-- Login Form -->
+                        <form id="login-form" class="auth-tab active">
+                            <div class="form-group">
+                                <label for="login-username">Username</label>
+                                <input type="text" id="login-username" placeholder="Enter your username" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="login-password">Password</label>
+                                <input type="password" id="login-password" placeholder="Enter your password" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary" onclick="handleLogin(event)">Login</button>
+                        </form>
+
+                        <!-- Register Form -->
+                        <form id="register-form" class="auth-tab">
+                            <div class="form-group">
+                                <label for="register-username">Username</label>
+                                <input type="text" id="register-username" placeholder="Choose a username" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="register-email">Email</label>
+                                <input type="email" id="register-email" placeholder="Enter your email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="register-fullname">Full Name</label>
+                                <input type="text" id="register-fullname" placeholder="Enter your full name">
+                            </div>
+                            <div class="form-group">
+                                <label for="register-password">Password</label>
+                                <input type="password" id="register-password" placeholder="Create a password" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary" onclick="handleRegister(event)">Register</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Page -->
+            <div id="dashboard-page" class="page">
+                <div class="page-header">
+                    <h1>Dashboard</h1>
+                    <p id="welcome-message">Welcome back!</p>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <h3>This Month's Spending</h3>
+                        <p class="amount" id="monthly-spending">$0.00</p>
+                        <p class="text-muted">Based on current trends</p>
+                    </div>
+
+                    <div class="card">
+                        <h3>Average Daily Spend</h3>
+                        <p class="amount" id="daily-spending">$0.00</p>
+                        <p class="text-muted">Last 30 days</p>
+                    </div>
+
+                    <div class="card">
+                        <h3>Savings Goals</h3>
+                        <p class="amount" id="savings-progress">0%</p>
+                        <p class="text-muted">Overall progress</p>
+                    </div>
+
+                    <div class="card">
+                        <h3>Budget Status</h3>
+                        <p class="amount" id="budget-status">On Track</p>
+                        <p class="text-muted">Current month</p>
+                    </div>
+                </div>
+
+                <div class="card full-width">
+                    <h3>AI Recommendations</h3>
+                    <div id="recommendations-list" class="recommendations">
+                        <p class="text-muted">Loading recommendations...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Expenses Page -->
+            <div id="expenses-page" class="page">
+                <div class="page-header">
+                    <h1>Expense Tracking</h1>
+                    <button class="btn btn-primary" onclick="showExpenseForm()">+ Add Expense</button>
+                </div>
+
+                <div class="card">
+                    <form id="expense-form" class="form-section">
+                        <h3>New Expense</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="expense-amount">Amount ($)</label>
+                                <input type="number" id="expense-amount" placeholder="0.00" step="0.01" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="expense-category">Category</label>
+                                <select id="expense-category" required>
+                                    <option value="">Select a category</option>
+                                    <option value="food">🍔 Food</option>
+                                    <option value="transport">🚗 Transport</option>
+                                    <option value="utilities">💡 Utilities</option>
+                                    <option value="entertainment">🎬 Entertainment</option>
+                                    <option value="health">🏥 Health</option>
+                                    <option value="shopping">🛍️ Shopping</option>
+                                    <option value="education">📚 Education</option>
+                                    <option value="other">📌 Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="expense-description">Description</label>
+                            <input type="text" id="expense-description" placeholder="What was this for?">
+                        </div>
+                        <button type="submit" class="btn btn-primary" onclick="addExpense(event)">Add Expense</button>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <h3>Recent Expenses</h3>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Category</th>
+                                <th>Description</th>
+                                <th>Amount</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="expenses-list">
+                            <tr>
+                                <td colspan="5" class="text-muted">No expenses yet. Add one to get started!</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Budgets Page -->
+            <div id="budgets-page" class="page">
+                <div class="page-header">
+                    <h1>Budget Management</h1>
+                    <button class="btn btn-primary" onclick="showBudgetForm()">+ Create Budget</button>
+                </div>
+
+                <div class="card">
+                    <form id="budget-form" class="form-section">
+                        <h3>New Budget</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="budget-name">Budget Name</label>
+                                <input type="text" id="budget-name" placeholder="e.g., Monthly Groceries" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="budget-category">Category</label>
+                                <input type="text" id="budget-category" placeholder="e.g., Food" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="budget-limit">Monthly Limit ($)</label>
+                                <input type="number" id="budget-limit" placeholder="0.00" step="0.01" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="budget-period">Period</label>
+                                <select id="budget-period">
+                                    <option value="monthly">Monthly</option>
+                                    <option value="quarterly">Quarterly</option>
+                                    <option value="yearly">Yearly</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary" onclick="addBudget(event)">Create Budget</button>
+                    </form>
+                </div>
+
+                <div id="budgets-list" class="budgets-grid">
+                    <p class="text-muted">No budgets created yet. Create one to track your spending!</p>
+                </div>
+            </div>
+
+            <!-- Savings Page -->
+            <div id="savings-page" class="page">
+                <div class="page-header">
+                    <h1>Savings Goals</h1>
+                    <button class="btn btn-primary" onclick="showSavingsForm()">+ Set Goal</button>
+                </div>
+
+                <div class="card">
+                    <form id="savings-form" class="form-section">
+                        <h3>New Savings Goal</h3>
+                        <div class="form-group">
+                            <label for="savings-name">Goal Name</label>
+                            <input type="text" id="savings-name" placeholder="e.g., Vacation Fund" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="savings-target">Target Amount ($)</label>
+                                <input type="number" id="savings-target" placeholder="0.00" step="0.01" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="savings-deadline">Deadline</label>
+                                <input type="date" id="savings-deadline">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="savings-description">Description</label>
+                            <input type="text" id="savings-description" placeholder="Why are you saving for this?">
+                        </div>
+                        <button type="submit" class="btn btn-primary" onclick="addSavingsGoal(event)">Create Goal</button>
+                    </form>
+                </div>
+
+                <div id="savings-list" class="savings-grid">
+                    <p class="text-muted">No savings goals yet. Create one to start saving!</p>
+                </div>
+            </div>
+
+            <!-- AI Advisor Page -->
+            <div id="advisor-page" class="page">
+                <div class="page-header">
+                    <h1>AI Financial Advisor</h1>
+                    <button class="btn btn-secondary" onclick="loadAdvisorData()">Refresh Insights</button>
+                </div>
+
+                <div class="advisor-grid">
+                    <div class="card">
+                        <h3>Spending Analysis</h3>
+                        <div id="spending-analysis" class="advisor-content">
+                            <p class="text-muted">Loading analysis...</p>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>Monthly Forecast</h3>
+                        <div id="spending-forecast" class="advisor-content">
+                            <p class="text-muted">Loading forecast...</p>
+                        </div>
+                    </div>
+
+                    <div class="card full-width">
+                        <h3>Smart Recommendations</h3>
+                        <div id="ai-recommendations" class="recommendations">
+                            <p class="text-muted">Loading recommendations...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Page -->
+            <div id="profile-page" class="page">
+                <div class="page-header">
+                    <h1>Profile Settings</h1>
+                </div>
+
+                <div class="card">
+                    <h3>Account Information</h3>
+                    <div class="profile-info">
+                        <p><strong>Username:</strong> <span id="profile-username">-</span></p>
+                        <p><strong>Email:</strong> <span id="profile-email">-</span></p>
+                        <p><strong>Full Name:</strong> <span id="profile-fullname">-</span></p>
+                        <p><strong>Member Since:</strong> <span id="profile-joined">-</span></p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <button class="btn btn-danger" onclick="handleLogout()">Logout</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2026 FinPilot - AI-Powered Personal Finance Manager</p>
+        </footer>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!-- AI Advisor Template -->
+<div id="advisor-page" class="page">
+    <div class="page-header">
+        <h1>AI Financial Advisor</h1>
+        <button class="btn btn-secondary" onclick="loadAdvisorData()">Refresh Insights</button>
+    </div>
+
+    <div class="advisor-grid">
+        <div class="card">
+            <h3>📊 Spending Analysis</h3>
+            <div id="spending-analysis" class="advisor-content">
+                <p class="text-muted">Loading analysis...</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>📈 Monthly Forecast</h3>
+            <div id="spending-forecast" class="advisor-content">
+                <p class="text-muted">Loading forecast...</p>
+            </div>
+        </div>
+
+        <div class="card full-width">
+            <h3>💡 Smart Recommendations</h3>
+            <div id="ai-recommendations" class="recommendations">
+                <p class="text-muted">Loading recommendations...</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>🎯 Category Breakdown</h3>
+            <div id="category-breakdown" class="category-chart">
+                <p class="text-muted">Loading data...</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>🔍 Spending Trends</h3>
+            <div id="spending-trends" class="trends-content">
+                <p class="text-muted">Loading trends...</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>💰 Budget Optimization</h3>
+            <div id="budget-optimization" class="optimization-content">
+                <p class="text-muted">Loading suggestions...</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="card full-width">
+        <h3>📋 Personalized Insights</h3>
+        <div class="insights-section">
+            <div id="insights-container" class="insights-list">
+                <p class="text-muted">Generate insights to see personalized recommendations based on your spending patterns...</p>
+            </div>
+            <button class="btn btn-primary" onclick="generateInsights()">Generate Full Insights</button>
+        </div>
+    </div>
+</div>
