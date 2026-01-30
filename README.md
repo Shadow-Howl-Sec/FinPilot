@@ -24,6 +24,8 @@ FinPilot/
 │   │   └── js/          # Core Application Logic (app.js)
 │   └── template/
 │       └── index.html   # Main Single-Page Application Template
+├── finpilot.db          # SQLite Database (Default)
+├── main.py              # FastAPI Application (API Layer, Routing & AI Logic)
 ├── requirements.txt     # Python Dependencies
 ├── .env.example         # Environment Config Template
 └── GETTING_STARTED.md   # In-depth Setup & Deployment Guide
