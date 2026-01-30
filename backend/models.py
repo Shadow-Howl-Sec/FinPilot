@@ -30,6 +30,19 @@ class TransactionType(str, enum.Enum):
     INCOME = "income"
     TRANSFER = "transfer"
 
+class PaymentMethod(str, enum.Enum):
+    CASH = "Cash"
+    CARD = "Card"
+    UPI = "UPI"
+    NET_BANKING = "Net Banking"
+    CHECK = "Check"
+    OTHER = "Other"
+
+class ExpenseStatus(str, enum.Enum):
+    CLEARED = "Cleared"
+    PENDING = "Pending"
+    RECONCILED = "Reconciled"
+
 # ==================== USER MODEL ====================
 
 class User(Base):
@@ -44,11 +57,11 @@ class User(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     is_active = Column(Boolean, default=True)
+    monthly_budget_limit = Column(Float, default=0.0) # Global Monthly Budget Cap
 
     # Relationships
     expenses = relationship("Expense", back_populates="user")
     budgets = relationship("Budget", back_populates="user")
-    savings_goals = relationship("SavingsGoal", back_populates="user")
     transactions = relationship("Transaction", back_populates="user")
 
     @staticmethod
@@ -76,6 +89,13 @@ class Expense(Base):
     category = Column(Enum(ExpenseCategory), default=ExpenseCategory.OTHER)
     description = Column(String, nullable=True)
     date = Column(DateTime, default=datetime.utcnow)
+    
+    # Professional Fields
+    payment_method = Column(Enum(PaymentMethod), default=PaymentMethod.CASH)
+    payee = Column(String, nullable=True) # Vendor/Person
+    reference_no = Column(String, nullable=True) # Invoice/Bill #
+    status = Column(Enum(ExpenseStatus), default=ExpenseStatus.CLEARED)
+    
     created_at = Column(DateTime, default=datetime.utcnow)
     blockchain_hash = Column(String, nullable=True)
 
@@ -97,37 +117,21 @@ class Budget(Base):
     period = Column(Enum(BudgetPeriod), default=BudgetPeriod.MONTHLY)
     start_date = Column(DateTime, default=datetime.utcnow)
     end_date = Column(DateTime, nullable=True)
+    is_rollover = Column(Boolean, default=False) # Access unused budget in next period
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     # Relationships
     user = relationship("User", back_populates="budgets")
 
-# ==================== SAVINGS GOAL MODEL ====================
-
-class SavingsGoal(Base):
-    """Savings goal model"""
-    __tablename__ = "savings_goals"
-
-    id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    name = Column(String, nullable=False)
-    target_amount = Column(Float, nullable=False)
-    current_amount = Column(Float, default=0.0)
-    deadline = Column(DateTime, nullable=True)
-    description = Column(String, nullable=True)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-
-    # Relationships
-    user = relationship("User", back_populates="savings_goals")
-
     @property
-    def progress_percentage(self) -> float:
-        """Calculate progress percentage"""
-        if self.target_amount == 0:
-            return 0.0
-        return min(100, (self.current_amount / self.target_amount) * 100)
+    def amount(self) -> float:
+        """Alias for limit"""
+        return self.limit
+
+# SavingsGoal Logic Removed
+
+# ==================== TRANSACTION MODEL ====================
 
 # ==================== TRANSACTION MODEL ====================
 

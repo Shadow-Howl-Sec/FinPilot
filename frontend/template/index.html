@@ -6,6 +6,7 @@
     <title>FinPilot - AI Personal Finance Manager</title>
     <link rel="stylesheet" href="/static/css/style.css">
     <link rel="stylesheet" href="/static/css/responsive.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div id="app">
@@ -18,9 +19,9 @@
                 <ul class="nav-menu">
                     <li><a href="#dashboard" onclick="navigate('dashboard')">Dashboard</a></li>
                     <li><a href="#expenses" onclick="navigate('expenses')">Expenses</a></li>
-                    <li><a href="#budgets" onclick="navigate('budgets')">Budgets</a></li>
-                    <li><a href="#savings" onclick="navigate('savings')">Savings</a></li>
-                    <li><a href="#advisor" onclick="navigate('advisor')">AI Advisor</a></li>
+                    <li><a href="#budgets" onclick="navigate('budgets')">Fiscal Budgeting</a></li>
+                   <!-- Savings moved to Dashboard/Global Budget logic -->
+                    <li><a href="#advisor" onclick="navigate('advisor')">Financial Audit</a></li>
                     <li><a href="#profile" onclick="navigate('profile')">Profile</a></li>
                 </ul>
             </div>
@@ -50,7 +51,7 @@
                                 <label for="login-password">Password</label>
                                 <input type="password" id="login-password" placeholder="Enter your password" required>
                             </div>
-                            <button type="submit" class="btn btn-primary" onclick="handleLogin(event)">Login</button>
+                            <button type="submit" class="btn btn-primary">Login</button>
                         </form>
 
                         <!-- Register Form -->
@@ -71,7 +72,7 @@
                                 <label for="register-password">Password</label>
                                 <input type="password" id="register-password" placeholder="Create a password" required>
                             </div>
-                            <button type="submit" class="btn btn-primary" onclick="handleRegister(event)">Register</button>
+                            <button type="submit" class="btn btn-primary">Register</button>
                         </form>
                     </div>
                 </div>
@@ -87,26 +88,29 @@
                 <div class="dashboard-grid">
                     <div class="card">
                         <h3>This Month's Spending</h3>
-                        <p class="amount" id="monthly-spending">$0.00</p>
+                        <p class="amount" id="monthly-spending">₹0.00</p>
                         <p class="text-muted">Based on current trends</p>
                     </div>
 
                     <div class="card">
                         <h3>Average Daily Spend</h3>
-                        <p class="amount" id="daily-spending">$0.00</p>
+                        <p class="amount" id="daily-spending">₹0.00</p>
                         <p class="text-muted">Last 30 days</p>
                     </div>
 
-                    <div class="card">
-                        <h3>Savings Goals</h3>
-                        <p class="amount" id="savings-progress">0%</p>
-                        <p class="text-muted">Overall progress</p>
-                    </div>
-
-                    <div class="card">
-                        <h3>Budget Status</h3>
-                        <p class="amount" id="budget-status">On Track</p>
-                        <p class="text-muted">Current month</p>
+                    <div class="card full-width">
+                        <h3>Wealth Builder & Savings History</h3>
+                        <div class="savings-history-container">
+                            <div class="savings-stat-big">
+                                <span class="label">Net Savings This Month</span>
+                                <span class="value" id="net-savings">₹0.00</span>
+                                <span class="sub" id="global-limit-display">Target: ₹0.00</span>
+                            </div>
+                            <div class="history-list" id="savings-history-list">
+                                <!-- Populated by JS -->
+                                <p class="text-muted">Loading history...</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -121,58 +125,83 @@
             <!-- Expenses Page -->
             <div id="expenses-page" class="page">
                 <div class="page-header">
-                    <h1>Expense Tracking</h1>
-                    <button class="btn btn-primary" onclick="showExpenseForm()">+ Add Expense</button>
+                    <h1>Expense Ledger</h1>
+                    <button class="btn btn-primary" onclick="showExpenseForm()">+ Add Entry</button>
                 </div>
 
                 <div class="card">
+                    <div id="category-limit-info" class="limit-info-box" style="display:none; background: #eef2ff; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; border-left: 4px solid var(--primary-color);">
+                        <h4>Category Intelligence: <span id="limit-category-name">-</span></h4>
+                        <div style="display: flex; gap: 2rem; margin-top: 0.5rem;">
+                            <div>
+                                <small>Daily Limit</small>
+                                <div style="font-weight: bold;" id="limit-daily">₹0.00</div>
+                            </div>
+                             <div>
+                                <small>Weekly Limit</small>
+                                <div style="font-weight: bold;" id="limit-weekly">₹0.00</div>
+                            </div>
+                             <div>
+                                <small>Monthly Limit</small>
+                                <div style="font-weight: bold;" id="limit-monthly">₹0.00</div>
+                            </div>
+                        </div>
+                    </div>
+
                     <form id="expense-form" class="form-section">
-                        <h3>New Expense</h3>
+                        <h3>New Transaction</h3>
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="expense-amount">Amount ($)</label>
+                                <label for="expense-amount">Amount (₹)</label>
                                 <input type="number" id="expense-amount" placeholder="0.00" step="0.01" required>
                             </div>
                             <div class="form-group">
-                                <label for="expense-category">Category</label>
+                                <label for="expense-category">Cost Center (Category)</label>
                                 <select id="expense-category" required>
-                                    <option value="">Select a category</option>
-                                    <option value="food">🍔 Food</option>
-                                    <option value="transport">🚗 Transport</option>
-                                    <option value="utilities">💡 Utilities</option>
-                                    <option value="entertainment">🎬 Entertainment</option>
-                                    <option value="health">🏥 Health</option>
-                                    <option value="shopping">🛍️ Shopping</option>
-                                    <option value="education">📚 Education</option>
-                                    <option value="other">📌 Other</option>
+                                    <option value="">Select Cost Center</option>
+                                    <option value="food">🍔 Food & Provisions</option>
+                                    <option value="transport">🚗 Logistics</option>
+                                    <option value="utilities">💡 Utilities/Overhead</option>
+                                    <option value="entertainment">🎬 Leisure/Entertainment</option>
+                                    <option value="health">🏥 Medical/Health</option>
+                                    <option value="shopping">🛍️ Discretionary/Shopping</option>
+                                    <option value="education">📚 Education/Training</option>
+                                    <option value="other">📌 Miscellaneous</option>
                                 </select>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="expense-description">Description</label>
-                            <input type="text" id="expense-description" placeholder="What was this for?">
+                            <label for="expense-description">Narration (Description)</label>
+                            <input type="text" id="expense-description" placeholder="Transaction details...">
                         </div>
-                        <button type="submit" class="btn btn-primary" onclick="addExpense(event)">Add Expense</button>
+                        <button type="submit" class="btn btn-primary">Record Transaction</button>
                     </form>
                 </div>
 
                 <div class="card">
-                    <h3>Recent Expenses</h3>
+                    <h3>Transaction Ledger</h3>
                     <table class="table">
                         <thead>
                             <tr>
                                 <th>Date</th>
-                                <th>Category</th>
-                                <th>Description</th>
+                                <th>Cost Center</th>
+                                <th>Narration</th>
                                 <th>Amount</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody id="expenses-list">
                             <tr>
-                                <td colspan="5" class="text-muted">No expenses yet. Add one to get started!</td>
+                                <td colspan="5" class="text-muted">No transactions recorded. Add entry to initialize ledger.</td>
                             </tr>
                         </tbody>
+                        <tfoot>
+                            <tr style="font-weight: bold; background: #f8fafc;">
+                                <td colspan="3" class="text-right">Total Debit:</td>
+                                <td class="font-mono" id="ledger-total">₹0.00</td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>
@@ -180,17 +209,34 @@
             <!-- Budgets Page -->
             <div id="budgets-page" class="page">
                 <div class="page-header">
-                    <h1>Budget Management</h1>
-                    <button class="btn btn-primary" onclick="showBudgetForm()">+ Create Budget</button>
+                    <h1>Fiscal Budgeting</h1>
+                    <!-- Global Budget Setting -->
+                </div>
+
+                <div class="card" style="border-left: 5px solid var(--primary-color);">
+                    <h3>Step 1: Set Global Monthly Cap</h3>
+                    <p class="text-muted">Define your absolute spending limit for the month. Savings will be calculated against this.</p>
+                    <div class="form-row" style="align-items: flex-end;">
+                        <div class="form-group" style="flex: 1;">
+                            <label for="global-budget-input">Global Monthly Limit (₹)</label>
+                            <input type="number" id="global-budget-input" placeholder="e.g. 50000" step="100">
+                        </div>
+                        <button class="btn btn-primary" onclick="updateGlobalBudget()" style="margin-bottom: 1rem;">Set Limit</button>
+                    </div>
+                </div>
+
+                <div class="page-header" style="margin-top: 2rem;">
+                    <h2>Step 2: Category Allocations</h2>
+                    <button class="btn btn-primary" onclick="showBudgetForm()">+ Alloc. Category</button>
                 </div>
 
                 <div class="card">
                     <form id="budget-form" class="form-section">
-                        <h3>New Budget</h3>
+                        <h3>New Allocation</h3>
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="budget-name">Budget Name</label>
-                                <input type="text" id="budget-name" placeholder="e.g., Monthly Groceries" required>
+                                <label for="budget-name">Budget Head</label>
+                                <input type="text" id="budget-name" placeholder="e.g., Monthly Provisions" required>
                             </div>
                             <div class="form-group">
                                 <label for="budget-category">Category</label>
@@ -199,11 +245,11 @@
                         </div>
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="budget-limit">Monthly Limit ($)</label>
+                                <label for="budget-limit">Monthly Limit (₹)</label>
                                 <input type="number" id="budget-limit" placeholder="0.00" step="0.01" required>
                             </div>
                             <div class="form-group">
-                                <label for="budget-period">Period</label>
+                                <label for="budget-period">Fiscal Period</label>
                                 <select id="budget-period">
                                     <option value="monthly">Monthly</option>
                                     <option value="quarterly">Quarterly</option>
@@ -211,57 +257,53 @@
                                 </select>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary" onclick="addBudget(event)">Create Budget</button>
+                        <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+                            <input type="checkbox" id="budget-rollover" style="width: auto;">
+                            <label for="budget-rollover" style="margin-bottom: 0;">Enable Fiscal Rollover (carry forward unused funds)</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Allocate Funds</button>
                     </form>
-                </div>
-
-                <div id="budgets-list" class="budgets-grid">
-                    <p class="text-muted">No budgets created yet. Create one to track your spending!</p>
-                </div>
-            </div>
-
-            <!-- Savings Page -->
-            <div id="savings-page" class="page">
-                <div class="page-header">
-                    <h1>Savings Goals</h1>
-                    <button class="btn btn-primary" onclick="showSavingsForm()">+ Set Goal</button>
                 </div>
 
                 <div class="card">
-                    <form id="savings-form" class="form-section">
-                        <h3>New Savings Goal</h3>
-                        <div class="form-group">
-                            <label for="savings-name">Goal Name</label>
-                            <input type="text" id="savings-name" placeholder="e.g., Vacation Fund" required>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="savings-target">Target Amount ($)</label>
-                                <input type="number" id="savings-target" placeholder="0.00" step="0.01" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="savings-deadline">Deadline</label>
-                                <input type="date" id="savings-deadline">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="savings-description">Description</label>
-                            <input type="text" id="savings-description" placeholder="Why are you saving for this?">
-                        </div>
-                        <button type="submit" class="btn btn-primary" onclick="addSavingsGoal(event)">Create Goal</button>
-                    </form>
-                </div>
-
-                <div id="savings-list" class="savings-grid">
-                    <p class="text-muted">No savings goals yet. Create one to start saving!</p>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Budget Head / Category</th>
+                                <th>Period</th>
+                                <th class="text-right">Allocated</th>
+                                <th class="text-right">Actual</th>
+                                <th class="text-right">Variance</th>
+                                <th class="text-center">Util. %</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="budgets-list">
+                            <tr>
+                                <td colspan="8" class="text-muted">No active budgets. Create an allocation to maintain fiscal discipline.</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr style="font-weight: bold; background: #f8fafc;">
+                                <td colspan="2">TOTAL PORTFOLIO VARIANCE</td>
+                                <td class="text-right" id="total-allocated">₹0.00</td>
+                                <td class="text-right" id="total-actual">₹0.00</td>
+                                <td class="text-right" id="total-variance">₹0.00</td>
+                                <td colspan="3"></td>
+                            </tr>
+                        </tfoot>
+                    </table>
                 </div>
             </div>
+
+            <!-- Savings Page Removed / Integrated into Dashboard -->
 
             <!-- AI Advisor Page -->
             <div id="advisor-page" class="page">
                 <div class="page-header">
-                    <h1>AI Financial Advisor</h1>
-                    <button class="btn btn-secondary" onclick="loadAdvisorData()">Refresh Insights</button>
+                    <h1>Financial & Compliance Audit</h1>
+                    <button class="btn btn-secondary" onclick="loadAdvisorData()">Refresh Audit</button>
                 </div>
 
                 <div class="advisor-grid">

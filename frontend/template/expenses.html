@@ -1,79 +1,113 @@
-<!-- Expenses Template -->
+<!-- General Ledger (Expenses) Template -->
 <div id="expenses-page" class="page">
     <div class="page-header">
-        <h1>Expense Tracking</h1>
-        <button class="btn btn-primary" onclick="showExpenseForm()">+ Add Expense</button>
+        <h1>Expense Register</h1>
+        <div class="header-actions">
+            <!-- Professional Date Picker / Period Selector -->
+            <select id="ledger-period" class="form-control" style="width: auto; display: inline-block;">
+                <option value="this_month">Current Month</option>
+                <option value="last_month">Last Month</option>
+                <option value="fiscal_ytd">Fiscal YTD</option>
+            </select>
+            <button class="btn btn-primary" onclick="showExpenseForm()">+ New Entry</button>
+        </div>
     </div>
 
-    <div class="card">
-        <form id="expense-form" class="form-section">
-            <h3>New Expense</h3>
+    <!-- Hidden Form for New Entry -->
+    <div class="card" id="expense-form-card" style="display: none;">
+        <form id="expense-form" class="form-section intra-form">
+            <div class="form-header">
+                <h3>New Journal Entry</h3>
+                <button type="button" class="close-btn" onclick="showExpenseForm()">×</button>
+            </div>
+            
             <div class="form-row">
-                <div class="form-group">
-                    <label for="expense-amount">Amount ($)</label>
-                    <input type="number" id="expense-amount" placeholder="0.00" step="0.01" required>
+                <div class="form-group col-md-3">
+                    <label>Date</label>
+                    <input type="date" id="expense-date" required>
                 </div>
-                <div class="form-group">
-                    <label for="expense-category">Category</label>
+                <div class="form-group col-md-3">
+                    <label>Reference #</label>
+                    <input type="text" id="expense-ref" placeholder="INV-001">
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Payee / Vendor</label>
+                    <input type="text" id="expense-payee" placeholder="e.g. Office Depot, Consultant">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label>Category (Account)</label>
                     <select id="expense-category" required>
-                        <option value="">Select a category</option>
-                        <option value="food">🍔 Food</option>
-                        <option value="transport">🚗 Transport</option>
-                        <option value="utilities">💡 Utilities</option>
-                        <option value="entertainment">🎬 Entertainment</option>
-                        <option value="health">🏥 Health</option>
-                        <option value="shopping">🛍️ Shopping</option>
-                        <option value="education">📚 Education</option>
-                        <option value="other">📌 Other</option>
+                        <option value="">Select Account...</option>
+                        <option value="food">Meals & Entertainment</option>
+                        <option value="transport">Transportation</option>
+                        <option value="utilities">Utilities</option>
+                        <option value="entertainment">Recreation</option>
+                        <option value="health">Medical</option>
+                        <option value="shopping">Supplies/Materials</option>
+                        <option value="education">Professional Development</option>
+                        <option value="other">Miscellaneous</option>
                     </select>
                 </div>
+                <div class="form-group col-md-4">
+                    <label>Payment Method</label>
+                    <select id="expense-method">
+                        <option value="Cash">Cash</option>
+                        <option value="Card">Credit Card</option>
+                        <option value="UPI">UPI</option>
+                        <option value="Net Banking">Net Banking</option>
+                        <option value="Check">Check</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-4">
+                    <label>Amount (INR)</label>
+                    <input type="number" id="expense-amount" placeholder="0.00" step="0.01" required class="text-right">
+                </div>
             </div>
-            <div class="form-group">
-                <label for="expense-description">Description</label>
-                <input type="text" id="expense-description" placeholder="What was this for?">
+
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <label>Description / Memo</label>
+                    <input type="text" id="expense-description" placeholder="Description of transaction">
+                </div>
             </div>
-            <button type="submit" class="btn btn-primary" onclick="addExpense(event)">Add Expense</button>
+            
+            <div class="form-actions right">
+                <button type="button" class="btn btn-secondary" onclick="showExpenseForm()">Cancel</button>
+                <button type="submit" class="btn btn-primary" onclick="addExpense(event)">Post Entry</button>
+            </div>
         </form>
     </div>
 
-    <div class="card">
-        <h3>Recent Expenses</h3>
-        <div class="expense-filters">
-            <input type="text" id="expense-search" placeholder="Search expenses..." onkeyup="filterExpenses()">
-            <select id="expense-category-filter" onchange="filterExpenses()">
-                <option value="">All Categories</option>
-                <option value="food">🍔 Food</option>
-                <option value="transport">🚗 Transport</option>
-                <option value="utilities">💡 Utilities</option>
-                <option value="entertainment">🎬 Entertainment</option>
-                <option value="health">🏥 Health</option>
-                <option value="shopping">🛍️ Shopping</option>
-                <option value="education">📚 Education</option>
-                <option value="other">📌 Other</option>
-            </select>
+    <!-- Ledger Table -->
+    <div class="card ledger-card">
+        <div class="ledger-header">
+            <h3>General Ledger</h3>
+            <div class="ledger-summary">
+                <span class="summary-item">Total Debits: <span id="ledger-total" class="negative-val">₹0.00</span></span>
+            </div>
         </div>
-        <table class="table">
+        
+        <table class="table ledger-table">
             <thead>
                 <tr>
-                    <th>Date</th>
-                    <th>Category</th>
+                    <th style="width: 100px;">Date</th>
+                    <th style="width: 100px;">Ref #</th>
+                    <th>Payee</th>
+                    <th>Account</th>
                     <th>Description</th>
-                    <th>Amount</th>
-                    <th>Action</th>
+                    <th>Method</th>
+                    <th style="width: 80px;">Status</th>
+                    <th class="text-right" style="width: 120px;">Amount</th>
+                    <th style="width: 50px;"></th>
                 </tr>
             </thead>
             <tbody id="expenses-list">
-                <tr>
-                    <td colspan="5" class="text-muted">No expenses yet. Add one to get started!</td>
-                </tr>
+                <tr><td colspan="9" class="text-center text-muted">Loading records...</td></tr>
             </tbody>
         </table>
-    </div>
-
-    <div class="card">
-        <h3>Expense Summary</h3>
-        <div id="expense-summary" class="summary-grid">
-            <p class="text-muted">Loading summary...</p>
-        </div>
     </div>
 </div>
