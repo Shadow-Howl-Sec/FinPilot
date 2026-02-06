@@ -1,363 +1,727 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FinPilot - AI Personal Finance Manager</title>
-    <link rel="stylesheet" href="/static/css/style.css">
-    <link rel="stylesheet" href="/static/css/responsive.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-</head>
-<body>
+    <link rel="stylesheet" href="/static/css/style.css" />
+    <link rel="stylesheet" href="/static/css/responsive.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
     <div id="app">
-        <!-- Navigation -->
-        <nav class="navbar">
-            <div class="container">
-                <div class="logo">
-                    <h1>💰 FinPilot</h1>
-                </div>
-                <ul class="nav-menu">
-                    <li><a href="#dashboard" onclick="navigate('dashboard')">Dashboard</a></li>
-                    <li><a href="#expenses" onclick="navigate('expenses')">Expenses</a></li>
-                    <li><a href="#budgets" onclick="navigate('budgets')">Fiscal Budgeting</a></li>
-                   <!-- Savings moved to Dashboard/Global Budget logic -->
-                    <li><a href="#advisor" onclick="navigate('advisor')">Financial Audit</a></li>
-                    <li><a href="#profile" onclick="navigate('profile')">Profile</a></li>
-                </ul>
+      <!-- Global Toast Container -->
+      <div id="toast-container" class="toast-container"></div>
+
+      <!-- Global Loading Overlay -->
+      <div id="loading-overlay" class="loading-overlay" style="display: none;">
+        <div class="loader"></div>
+        <p>Processing fiscal data...</p>
+      </div>
+      <!-- Navigation -->
+      <nav class="navbar">
+        <div class="container">
+          <div class="logo">
+            <img
+              src="/static/img/logo.png"
+              alt="FinPilot Logo"
+              class="logo-img"
+              onerror="this.style.display = 'none'"
+            />
+            <h1>FinPilot</h1>
+          </div>
+          <ul class="nav-menu">
+            <li>
+              <a href="#dashboard" onclick="navigate('dashboard')">Dashboard</a>
+            </li>
+            <li>
+              <a href="#expenses" onclick="navigate('expenses')">Expenses</a>
+            </li>
+            <li>
+              <a href="#budgets" onclick="navigate('budgets')"
+                >Fiscal Budgeting</a
+              >
+            </li>
+            <li>
+              <a href="#advisor" onclick="navigate('advisor')"
+                >Financial Audit</a
+              >
+            </li>
+            <li>
+              <a href="#profile" onclick="navigate('profile')">Profile</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+
+      <!-- Main Content -->
+      <div class="container main-content">
+        <!-- Landing Page -->
+        <div id="landing-page" class="page active">
+          <section class="hero">
+            <div class="hero-content">
+              <h1 class="hero-title animate-in" style="animation-delay: 0.1s;">
+                Master Your Money with
+                <span class="gradient-text">AI Precision</span>
+              </h1>
+              <p class="hero-subtitle animate-in" style="animation-delay: 0.2s;">
+                FinPilot combines professional accounting ledger with blockchain
+                security and AI insights to give you total control over your
+                fiscal future.
+              </p>
+              <div class="hero-cta animate-in" style="animation-delay: 0.3s;">
+                <button
+                  class="btn btn-primary btn-lg"
+                  onclick="navigate('login')"
+                >
+                  Get Started Free
+                </button>
+                <button
+                  class="btn btn-neutral btn-lg"
+                  onclick="scrollToFeatures()"
+                >
+                  Explore Features
+                </button>
+              </div>
             </div>
-        </nav>
-
-        <!-- Main Content -->
-        <div class="container main-content">
-            <!-- Auth Page -->
-            <div id="auth-page" class="page active">
-                <div class="auth-container">
-                    <div class="auth-form">
-                        <h2>Welcome to FinPilot</h2>
-                        <p>Your AI-Powered Personal Finance Manager</p>
-                        
-                        <div class="form-tabs">
-                            <button class="tab-btn active" onclick="switchAuthTab('login')">Login</button>
-                            <button class="tab-btn" onclick="switchAuthTab('register')">Register</button>
-                        </div>
-
-                        <!-- Login Form -->
-                        <form id="login-form" class="auth-tab active">
-                            <div class="form-group">
-                                <label for="login-username">Username</label>
-                                <input type="text" id="login-username" placeholder="Enter your username" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="login-password">Password</label>
-                                <input type="password" id="login-password" placeholder="Enter your password" required>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Login</button>
-                        </form>
-
-                        <!-- Register Form -->
-                        <form id="register-form" class="auth-tab">
-                            <div class="form-group">
-                                <label for="register-username">Username</label>
-                                <input type="text" id="register-username" placeholder="Choose a username" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="register-email">Email</label>
-                                <input type="email" id="register-email" placeholder="Enter your email" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="register-fullname">Full Name</label>
-                                <input type="text" id="register-fullname" placeholder="Enter your full name">
-                            </div>
-                            <div class="form-group">
-                                <label for="register-password">Password</label>
-                                <input type="password" id="register-password" placeholder="Create a password" required>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Register</button>
-                        </form>
-                    </div>
-                </div>
+            <div class="hero-visual animate-in" style="animation-delay: 0.4s;">
+              <img
+                src="/static/img/hero.png"
+                alt="FinPilot Analytics"
+                class="hero-img"
+              />
             </div>
+          </section>
 
-            <!-- Dashboard Page -->
-            <div id="dashboard-page" class="page">
-                <div class="page-header">
-                    <h1>Dashboard</h1>
-                    <p id="welcome-message">Welcome back!</p>
-                </div>
-
-                <div class="dashboard-grid">
-                    <div class="card">
-                        <h3>This Month's Spending</h3>
-                        <p class="amount" id="monthly-spending">₹0.00</p>
-                        <p class="text-muted">Based on current trends</p>
-                    </div>
-
-                    <div class="card">
-                        <h3>Average Daily Spend</h3>
-                        <p class="amount" id="daily-spending">₹0.00</p>
-                        <p class="text-muted">Last 30 days</p>
-                    </div>
-
-                    <div class="card full-width">
-                        <h3>Wealth Builder & Savings History</h3>
-                        <div class="savings-history-container">
-                            <div class="savings-stat-big">
-                                <span class="label">Net Savings This Month</span>
-                                <span class="value" id="net-savings">₹0.00</span>
-                                <span class="sub" id="global-limit-display">Target: ₹0.00</span>
-                            </div>
-                            <div class="history-list" id="savings-history-list">
-                                <!-- Populated by JS -->
-                                <p class="text-muted">Loading history...</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card full-width">
-                    <h3>AI Recommendations</h3>
-                    <div id="recommendations-list" class="recommendations">
-                        <p class="text-muted">Loading recommendations...</p>
-                    </div>
-                </div>
+          <section id="features" class="features-section">
+            <div class="section-header">
+              <h2>Engineered for Financial Clarity</h2>
+              <p>
+                A suite of powerful tools designed for both individual
+                discipline and professional-grade tracking.
+              </p>
             </div>
-
-            <!-- Expenses Page -->
-            <div id="expenses-page" class="page">
-                <div class="page-header">
-                    <h1>Expense Ledger</h1>
-                    <button class="btn btn-primary" onclick="showExpenseForm()">+ Add Entry</button>
-                </div>
-
-                <div class="card">
-                    <div id="category-limit-info" class="limit-info-box" style="display:none; background: #eef2ff; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; border-left: 4px solid var(--primary-color);">
-                        <h4>Category Intelligence: <span id="limit-category-name">-</span></h4>
-                        <div style="display: flex; gap: 2rem; margin-top: 0.5rem;">
-                            <div>
-                                <small>Daily Limit</small>
-                                <div style="font-weight: bold;" id="limit-daily">₹0.00</div>
-                            </div>
-                             <div>
-                                <small>Weekly Limit</small>
-                                <div style="font-weight: bold;" id="limit-weekly">₹0.00</div>
-                            </div>
-                             <div>
-                                <small>Monthly Limit</small>
-                                <div style="font-weight: bold;" id="limit-monthly">₹0.00</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <form id="expense-form" class="form-section">
-                        <h3>New Transaction</h3>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="expense-amount">Amount (₹)</label>
-                                <input type="number" id="expense-amount" placeholder="0.00" step="0.01" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="expense-category">Cost Center (Category)</label>
-                                <select id="expense-category" required>
-                                    <option value="">Select Cost Center</option>
-                                    <option value="food">🍔 Food & Provisions</option>
-                                    <option value="transport">🚗 Logistics</option>
-                                    <option value="utilities">💡 Utilities/Overhead</option>
-                                    <option value="entertainment">🎬 Leisure/Entertainment</option>
-                                    <option value="health">🏥 Medical/Health</option>
-                                    <option value="shopping">🛍️ Discretionary/Shopping</option>
-                                    <option value="education">📚 Education/Training</option>
-                                    <option value="other">📌 Miscellaneous</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="expense-description">Narration (Description)</label>
-                            <input type="text" id="expense-description" placeholder="Transaction details...">
-                        </div>
-                        <button type="submit" class="btn btn-primary">Record Transaction</button>
-                    </form>
-                </div>
-
-                <div class="card">
-                    <h3>Transaction Ledger</h3>
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Cost Center</th>
-                                <th>Narration</th>
-                                <th>Amount</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="expenses-list">
-                            <tr>
-                                <td colspan="5" class="text-muted">No transactions recorded. Add entry to initialize ledger.</td>
-                            </tr>
-                        </tbody>
-                        <tfoot>
-                            <tr style="font-weight: bold; background: #f8fafc;">
-                                <td colspan="3" class="text-right">Total Debit:</td>
-                                <td class="font-mono" id="ledger-total">₹0.00</td>
-                                <td></td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
+            <div class="features-grid">
+              <div class="feature-card animate-in" style="animation-delay: 0.1s;">
+                <div class="feature-icon">🛡️</div>
+                <h3>Blockchain Integrity</h3>
+                <p>
+                  Every transaction is hashed and linked. Tamper-proof
+                  record-keeping for ultimate audit reliability.
+                </p>
+              </div>
+              <div class="feature-card animate-in" style="animation-delay: 0.2s;">
+                <div class="feature-icon">🤖</div>
+                <h3>AI-Powered Audit</h3>
+                <p>
+                  Get real-time insights into spending patterns and proactive
+                  alerts before you breach your limits.
+                </p>
+              </div>
+              <div class="feature-card animate-in" style="animation-delay: 0.3s;">
+                <div class="feature-icon">⚖️</div>
+                <h3>Variance Analysis</h3>
+                <p>
+                  Professional-grade budgeting. Compare allocated vs. actual
+                  spend with automated portfolio variance reports.
+                </p>
+              </div>
             </div>
+          </section>
 
-            <!-- Budgets Page -->
-            <div id="budgets-page" class="page">
-                <div class="page-header">
-                    <h1>Fiscal Budgeting</h1>
-                    <!-- Global Budget Setting -->
-                </div>
-
-                <div class="card" style="border-left: 5px solid var(--primary-color);">
-                    <h3>Step 1: Set Global Monthly Cap</h3>
-                    <p class="text-muted">Define your absolute spending limit for the month. Savings will be calculated against this.</p>
-                    <div class="form-row" style="align-items: flex-end;">
-                        <div class="form-group" style="flex: 1;">
-                            <label for="global-budget-input">Global Monthly Limit (₹)</label>
-                            <input type="number" id="global-budget-input" placeholder="e.g. 50000" step="100">
-                        </div>
-                        <button class="btn btn-primary" onclick="updateGlobalBudget()" style="margin-bottom: 1rem;">Set Limit</button>
-                    </div>
-                </div>
-
-                <div class="page-header" style="margin-top: 2rem;">
-                    <h2>Step 2: Category Allocations</h2>
-                    <button class="btn btn-primary" onclick="showBudgetForm()">+ Alloc. Category</button>
-                </div>
-
-                <div class="card">
-                    <form id="budget-form" class="form-section">
-                        <h3>New Allocation</h3>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="budget-name">Budget Head</label>
-                                <input type="text" id="budget-name" placeholder="e.g., Monthly Provisions" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="budget-category">Category</label>
-                                <input type="text" id="budget-category" placeholder="e.g., Food" required>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="budget-limit">Monthly Limit (₹)</label>
-                                <input type="number" id="budget-limit" placeholder="0.00" step="0.01" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="budget-period">Fiscal Period</label>
-                                <select id="budget-period">
-                                    <option value="monthly">Monthly</option>
-                                    <option value="quarterly">Quarterly</option>
-                                    <option value="yearly">Yearly</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
-                            <input type="checkbox" id="budget-rollover" style="width: auto;">
-                            <label for="budget-rollover" style="margin-bottom: 0;">Enable Fiscal Rollover (carry forward unused funds)</label>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Allocate Funds</button>
-                    </form>
-                </div>
-
-                <div class="card">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Budget Head / Category</th>
-                                <th>Period</th>
-                                <th class="text-right">Allocated</th>
-                                <th class="text-right">Actual</th>
-                                <th class="text-right">Variance</th>
-                                <th class="text-center">Util. %</th>
-                                <th class="text-center">Status</th>
-                                <th class="text-center">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="budgets-list">
-                            <tr>
-                                <td colspan="8" class="text-muted">No active budgets. Create an allocation to maintain fiscal discipline.</td>
-                            </tr>
-                        </tbody>
-                        <tfoot>
-                            <tr style="font-weight: bold; background: #f8fafc;">
-                                <td colspan="2">TOTAL PORTFOLIO VARIANCE</td>
-                                <td class="text-right" id="total-allocated">₹0.00</td>
-                                <td class="text-right" id="total-actual">₹0.00</td>
-                                <td class="text-right" id="total-variance">₹0.00</td>
-                                <td colspan="3"></td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
+          <section class="cta-banner">
+            <div class="banner-content">
+              <h3>Ready to navigate your wealth?</h3>
+              <p>
+                Join thousands of users who trust FinPilot for their financial
+                intelligence.
+              </p>
             </div>
-
-            <!-- Savings Page Removed / Integrated into Dashboard -->
-
-            <!-- AI Advisor Page -->
-            <div id="advisor-page" class="page">
-                <div class="page-header">
-                    <h1>Financial & Compliance Audit</h1>
-                    <button class="btn btn-secondary" onclick="loadAdvisorData()">Refresh Audit</button>
-                </div>
-
-                <div class="advisor-grid">
-                    <div class="card">
-                        <h3>Spending Analysis</h3>
-                        <div id="spending-analysis" class="advisor-content">
-                            <p class="text-muted">Loading analysis...</p>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <h3>Monthly Forecast</h3>
-                        <div id="spending-forecast" class="advisor-content">
-                            <p class="text-muted">Loading forecast...</p>
-                        </div>
-                    </div>
-
-                    <div class="card full-width">
-                        <h3>Smart Recommendations</h3>
-                        <div id="ai-recommendations" class="recommendations">
-                            <p class="text-muted">Loading recommendations...</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Profile Page -->
-            <div id="profile-page" class="page">
-                <div class="page-header">
-                    <h1>Profile Settings</h1>
-                </div>
-
-                <div class="card">
-                    <h3>Account Information</h3>
-                    <div class="profile-info">
-                        <p><strong>Username:</strong> <span id="profile-username">-</span></p>
-                        <p><strong>Email:</strong> <span id="profile-email">-</span></p>
-                        <p><strong>Full Name:</strong> <span id="profile-fullname">-</span></p>
-                        <p><strong>Member Since:</strong> <span id="profile-joined">-</span></p>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <button class="btn btn-danger" onclick="handleLogout()">Logout</button>
-                </div>
-            </div>
+            <button class="btn btn-primary" onclick="navigate('login')">
+              Enter the Suite
+            </button>
+          </section>
         </div>
 
-        <!-- Footer -->
-        <footer class="footer">
-            <p>&copy; 2026 FinPilot - AI-Powered Personal Finance Manager</p>
-        </footer>
+        <!-- Login Page -->
+        <div id="login-page" class="page">
+          <div class="auth-split-container">
+            <!-- Left Side: Branding Visual -->
+            <div class="auth-side-brand">
+              <div class="brand-content">
+                <div class="logo">
+                  <img
+                    src="/static/img/logo.png"
+                    alt="FinPilot Logo"
+                    class="logo-img"
+                    onerror="this.style.display = 'none'"
+                  />
+                  <h2 class="brand-name">FinPilot</h2>
+                </div>
+                <h1 class="brand-tagline">Welcome Back.</h1>
+                <p class="brand-description">
+                  Resume your journey towards absolute financial intelligence.
+                </p>
+
+                <div class="brand-stats">
+                  <div class="stat-item">
+                    <span class="stat-icon">📈</span>
+                    <span>Active Market Insights</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-icon">🛡️</span>
+                    <span>Secure Session Link</span>
+                  </div>
+                </div>
+              </div>
+              <div class="back-home">
+                <a href="#" onclick="navigate('landing')">← Back to Explorer</a>
+              </div>
+            </div>
+
+            <!-- Right Side: Interaction Matrix -->
+            <div class="auth-side-form">
+              <div class="auth-form-card">
+                <div class="form-header">
+                  <h3>Sign In</h3>
+                  <p>Elevate your financial discipline today.</p>
+                </div>
+
+                <!-- Login Form -->
+                <form id="login-form">
+                  <div class="form-group">
+                    <label for="login-username">Username</label>
+                    <div class="input-wrapper">
+                      <input
+                        type="text"
+                        id="login-username"
+                        placeholder="e.g. navigator_01"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <div class="input-wrapper">
+                      <input
+                        type="password"
+                        id="login-password"
+                        placeholder="••••••••"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <button type="submit" class="btn btn-primary btn-block">
+                    Initialize Session
+                  </button>
+                </form>
+                <div class="form-footer" style="margin-top: 20px; text-align: center;">
+                  <p>New to the platform? <a href="#" onclick="navigate('register')">Create Portfolio</a></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Register Page -->
+        <div id="register-page" class="page">
+          <div class="auth-split-container">
+            <!-- Left Side: Branding Visual -->
+            <div class="auth-side-brand">
+              <div class="brand-content">
+                <div class="logo">
+                  <img
+                    src="/static/img/logo.png"
+                    alt="FinPilot Logo"
+                    class="logo-img"
+                    onerror="this.style.display = 'none'"
+                  />
+                  <h2 class="brand-name">FinPilot</h2>
+                </div>
+                <h1 class="brand-tagline">Start Your Legacy.</h1>
+                <p class="brand-description">
+                  Join the ranks of disciplined navigators mastering their wealth.
+                </p>
+
+                <div class="brand-stats">
+                  <div class="stat-item">
+                    <span class="stat-icon">💎</span>
+                    <span>Immutable Ledger</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-icon">🤖</span>
+                    <span>Predictive AI Audit</span>
+                  </div>
+                </div>
+              </div>
+              <div class="back-home">
+                <a href="#" onclick="navigate('landing')">← Back to Explorer</a>
+              </div>
+            </div>
+
+            <!-- Right Side: Interaction Matrix -->
+            <div class="auth-side-form">
+              <div class="auth-form-card">
+                <div class="form-header">
+                  <h3>Create Portfolio</h3>
+                  <p>Begin your journey with professional-grade tools.</p>
+                </div>
+
+                <!-- Register Form -->
+                <form id="register-form">
+                  <div class="form-group">
+                    <label for="register-username">Choose Username</label>
+                    <input
+                      type="text"
+                      id="register-username"
+                      placeholder="e.g. wealth_pilot"
+                      required
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="register-email">Email Address</label>
+                    <input
+                      type="email"
+                      id="register-email"
+                      placeholder="you@example.com"
+                      required
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="register-fullname">Complete Name</label>
+                    <input
+                      type="text"
+                      id="register-fullname"
+                      placeholder="John Doe"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="register-password">Secure Password</label>
+                    <input
+                      type="password"
+                      id="register-password"
+                      placeholder="Create a strong password"
+                      required
+                    />
+                  </div>
+                  <button type="submit" class="btn btn-primary btn-block">
+                    Establish Account
+                  </button>
+                </form>
+                <div class="form-footer" style="margin-top: 20px; text-align: center;">
+                  <p>Already have a portfolio? <a href="#" onclick="navigate('login')">Sign In</a></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dashboard Page -->
+        <div id="dashboard-page" class="page">
+          <div class="page-header">
+            <h1>Dashboard</h1>
+            <p id="welcome-message">Welcome back!</p>
+          </div>
+
+          <div class="dashboard-grid">
+            <div class="card animate-in" style="animation-delay: 0.1s;">
+              <h3>This Month's Spending</h3>
+              <p class="amount" id="monthly-spending">₹0.00</p>
+              <p class="text-muted">Based on current trends</p>
+            </div>
+
+            <div class="card animate-in" style="animation-delay: 0.2s;">
+              <h3>Average Daily Spend</h3>
+              <p class="amount" id="daily-spending">₹0.00</p>
+              <p class="text-muted">Last 30 days</p>
+            </div>
+
+            <div class="card full-width animate-in" style="animation-delay: 0.3s;">
+              <h3>Wealth Builder & Savings History</h3>
+              <div class="savings-history-container">
+                <div class="savings-stat-big">
+                  <span class="label">Net Savings This Month</span>
+                  <span class="value" id="net-savings">₹0.00</span>
+                  <span class="sub" id="global-limit-display">Target: ₹0.00</span>
+                </div>
+                <div class="savings-stat-big">
+                  <span class="label">Total Wealth Built</span>
+                  <span class="value" id="overall-savings">₹0.00</span>
+                </div>
+                <div class="history-list" id="savings-history-list">
+                  <!-- Populated by JS -->
+                  <p class="text-muted">Loading history...</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card full-width animate-in" style="animation-delay: 0.4s;">
+            <h3>AI Recommendations</h3>
+            <div id="recommendations-list" class="recommendations">
+              <p class="text-muted">Loading recommendations...</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Expenses Page -->
+        <div id="expenses-page" class="page">
+          <div class="page-header">
+            <h1>Expense Ledger</h1>
+            <button class="btn btn-primary" onclick="showExpenseForm()">
+              + Add Entry
+            </button>
+          </div>
+
+          <div class="card">
+            <div
+              id="category-limit-info"
+              class="limit-info-box animate-in"
+              style="
+                display: none;
+                background: var(--primary-soft);
+                padding: 1.5rem;
+                border-radius: var(--radius-md);
+                margin-bottom: 1.5rem;
+                border: 1px solid var(--border-glass);
+                box-shadow: var(--shadow-sm);
+              "
+            >
+              <h4>
+                Category Intelligence: <span id="limit-category-name" class="gradient-text">-</span>
+              </h4>
+              <div style="display: flex; gap: 3rem; margin-top: 1rem">
+                <div>
+                  <small class="text-muted">Daily Limit</small>
+                  <div style="font-weight: 700; font-size: 1.2rem;" id="limit-daily">₹0.00</div>
+                </div>
+                <div>
+                  <small class="text-muted">Weekly Limit</small>
+                  <div style="font-weight: 700; font-size: 1.2rem;" id="limit-weekly">₹0.00</div>
+                </div>
+                <div>
+                  <small class="text-muted">Monthly Limit</small>
+                  <div style="font-weight: 700; font-size: 1.2rem;" id="limit-monthly">₹0.00</div>
+                </div>
+              </div>
+            </div>
+
+            <form id="expense-form" class="form-section">
+              <h3>New Transaction</h3>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="expense-date">Entry Date</label>
+                  <input type="date" id="expense-date" required />
+                </div>
+                <div class="form-group">
+                  <label for="expense-amount">Amount (₹)</label>
+                  <input
+                    type="number"
+                    id="expense-amount"
+                    placeholder="0.00"
+                    step="0.01"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="expense-category">Cost Center (Category)</label>
+                  <select id="expense-category" required>
+                    <option value="">Select Cost Center</option>
+                    <option value="food">🍔 Food & Provisions</option>
+                    <option value="transport">🚗 Logistics</option>
+                    <option value="utilities">💡 Utilities/Overhead</option>
+                    <option value="entertainment">🎬 Leisure/Entertainment</option>
+                    <option value="health">🏥 Medical/Health</option>
+                    <option value="shopping">🛍️ Discretionary/Shopping</option>
+                    <option value="education">📚 Education/Training</option>
+                    <option value="other">📌 Miscellaneous</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="expense-payee">Payee / Vendor</label>
+                  <input type="text" id="expense-payee" placeholder="e.g. Amazon, Landlord" />
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="expense-method">Payment Method</label>
+                  <select id="expense-method">
+                    <option value="Cash">Cash</option>
+                    <option value="UPI">UPI</option>
+                    <option value="Card">Card</option>
+                    <option value="Net Banking">Net Banking</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="expense-ref">Reference No.</label>
+                  <input type="text" id="expense-ref" placeholder="Bill/Receipt #" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="expense-description">Narration (Description)</label>
+                <input
+                  type="text"
+                  id="expense-description"
+                  placeholder="Transaction details..."
+                />
+              </div>
+              <button type="submit" class="btn btn-primary">
+                Record Transaction
+              </button>
+            </form>
+          </div>
+
+          <div class="card">
+            <h3>Transaction Ledger</h3>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Cost Center</th>
+                  <th>Narration</th>
+                  <th>Amount</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="expenses-list">
+                <tr>
+                  <td colspan="5" class="text-muted">
+                    No transactions recorded. Add entry to initialize ledger.
+                  </td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr style="font-weight: bold; background: #f8fafc">
+                  <td colspan="3" class="text-right">Total Debit:</td>
+                  <td class="font-mono" id="ledger-total">₹0.00</td>
+                  <td></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+
+        <!-- Budgets Page -->
+        <div id="budgets-page" class="page">
+          <div class="page-header">
+            <h1>Fiscal Budgeting</h1>
+            <!-- Global Budget Setting -->
+          </div>
+
+          <div class="card" style="border-left: 5px solid var(--primary-color)">
+            <h3>Step 1: Set Global Monthly Cap</h3>
+            <p class="text-muted">
+              Define your absolute spending limit for the month. Savings will be
+              calculated against this.
+            </p>
+            <div class="form-row" style="align-items: flex-end">
+              <div class="form-group" style="flex: 1">
+                <label for="global-budget-input"
+                  >Global Monthly Limit (₹)</label
+                >
+                <input
+                  type="number"
+                  id="global-budget-input"
+                  placeholder="e.g. 50000"
+                  step="100"
+                />
+              </div>
+              <button
+                class="btn btn-primary"
+                onclick="updateGlobalBudget()"
+                style="margin-bottom: 1rem"
+              >
+                Set Limit
+              </button>
+            </div>
+          </div>
+
+          <div class="page-header" style="margin-top: 2rem">
+            <h2>Step 2: Category Allocations</h2>
+            <button class="btn btn-primary" onclick="showBudgetForm()">
+              + Alloc. Category
+            </button>
+          </div>
+
+          <div class="card">
+            <form id="budget-form" class="form-section">
+              <h3>New Allocation</h3>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="budget-name">Budget Head</label>
+                  <input
+                    type="text"
+                    id="budget-name"
+                    placeholder="e.g., Monthly Provisions"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="budget-category">Category</label>
+                  <input
+                    type="text"
+                    id="budget-category"
+                    placeholder="e.g., Food"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="budget-limit">Monthly Limit (₹)</label>
+                  <input
+                    type="number"
+                    id="budget-limit"
+                    placeholder="0.00"
+                    step="0.01"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="budget-period">Fiscal Period</label>
+                  <select id="budget-period">
+                    <option value="monthly">Monthly</option>
+                    <option value="quarterly">Quarterly</option>
+                    <option value="yearly">Yearly</option>
+                  </select>
+                </div>
+              </div>
+              <div
+                class="form-group"
+                style="
+                  display: flex;
+                  align-items: center;
+                  gap: 0.5rem;
+                  margin-bottom: 1rem;
+                "
+              >
+                <input
+                  type="checkbox"
+                  id="budget-rollover"
+                  style="width: auto"
+                />
+                <label for="budget-rollover" style="margin-bottom: 0"
+                  >Enable Fiscal Rollover (carry forward unused funds)</label
+                >
+              </div>
+              <button type="submit" class="btn btn-primary">
+                Allocate Funds
+              </button>
+            </form>
+          </div>
+
+          <div class="card">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Budget Head / Category</th>
+                  <th>Period</th>
+                  <th class="text-right">Allocated</th>
+                  <th class="text-right">Actual</th>
+                  <th class="text-right">Variance</th>
+                  <th class="text-center">Util. %</th>
+                  <th class="text-center">Status</th>
+                  <th class="text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody id="budgets-list">
+                <tr>
+                  <td colspan="8" class="text-muted">
+                    No active budgets. Create an allocation to maintain fiscal
+                    discipline.
+                  </td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr style="font-weight: bold; background: #f8fafc">
+                  <td colspan="2">TOTAL PORTFOLIO VARIANCE</td>
+                  <td class="text-right" id="total-allocated">₹0.00</td>
+                  <td class="text-right" id="total-actual">₹0.00</td>
+                  <td class="text-right" id="total-variance">₹0.00</td>
+                  <td colspan="3"></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+
+        <!-- Savings Page Removed / Integrated into Dashboard -->
+
+        <!-- AI Advisor Page -->
+        <div id="advisor-page" class="page">
+          <div class="page-header">
+            <h1>Financial & Compliance Audit</h1>
+            <button class="btn btn-secondary" onclick="loadAdvisorData()">
+              Refresh Audit
+            </button>
+          </div>
+
+          <div class="advisor-grid">
+            <div class="card">
+              <h3>Spending Analysis</h3>
+              <div id="spending-analysis" class="advisor-content">
+                <p class="text-muted">Loading analysis...</p>
+              </div>
+            </div>
+
+            <div class="card">
+              <h3>Monthly Forecast</h3>
+              <div id="spending-forecast" class="advisor-content">
+                <p class="text-muted">Loading forecast...</p>
+              </div>
+            </div>
+
+            <div class="card full-width">
+              <h3>Smart Recommendations</h3>
+              <div id="ai-recommendations" class="recommendations">
+                <p class="text-muted">Loading recommendations...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Profile Page -->
+        <div id="profile-page" class="page">
+          <div class="page-header">
+            <h1>Profile Settings</h1>
+          </div>
+
+          <div class="card">
+            <h3>Account Information</h3>
+            <div class="profile-info">
+              <p>
+                <strong>Username:</strong> <span id="profile-username">-</span>
+              </p>
+              <p><strong>Email:</strong> <span id="profile-email">-</span></p>
+              <p>
+                <strong>Full Name:</strong> <span id="profile-fullname">-</span>
+              </p>
+              <p>
+                <strong>Member Since:</strong>
+                <span id="profile-joined">-</span>
+              </p>
+            </div>
+          </div>
+
+          <div class="card">
+            <button class="btn btn-danger" onclick="handleLogout()">
+              Logout
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <footer class="footer">
+        <p>&copy; 2026 FinPilot - AI-Powered Personal Finance Manager</p>
+      </footer>
     </div>
 
     <script src="/static/js/app.js"></script>
-</body>
+  </body>
 </html>
