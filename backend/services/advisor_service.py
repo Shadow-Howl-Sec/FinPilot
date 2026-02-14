@@ -78,8 +78,9 @@ class FinancialAdvisor:
         total_actual_monthly = 0
 
         for budget in budgets:
+            target_cat = str(budget.category).lower()
             category_spending = sum(
-                e.amount for e in current_month_expenses if e.category.value == budget.category
+                e.amount for e in current_month_expenses if str(e.category.value).lower() == target_cat
             )
             total_budgeted_monthly += budget.limit
             total_actual_monthly += category_spending

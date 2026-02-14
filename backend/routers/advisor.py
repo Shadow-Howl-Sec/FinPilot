@@ -5,8 +5,29 @@ from datetime import datetime, timedelta
 from ..database import get_db
 from ..models import User, Expense
 from ..services.advisor_service import FinancialAdvisor
+from ..services.audit_service import AuditService
 
 router = APIRouter(prefix="/advisor", tags=["advisor"])
+
+@router.get("/audit")
+async def get_financial_audit(user_id: int, db: Session = Depends(get_db)):
+    """Perform comprehensive financial audit"""
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    audit = AuditService(db)
+    integrity = audit.perform_integrity_sweep(user_id)
+    anomalies = audit.detect_anomalies(user_id)
+    compliance = audit.check_compliance(user_id)
+    
+    return {
+        "user_id": user_id,
+        "timestamp": datetime.utcnow().isoformat(),
+        "integrity": integrity,
+        "anomalies": anomalies,
+        "compliance": compliance
+    }
 
 @router.get("/recommendations")
 async def get_recommendations(user_id: int, db: Session = Depends(get_db)):

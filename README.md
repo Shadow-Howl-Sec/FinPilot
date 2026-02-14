@@ -4,11 +4,11 @@ FinPilot is a professional-grade personal finance management platform. It combin
 
 ## 📋 Core Capabilities
 
-- **Fiscal Budgeting** – Dual-layer budgeting with Global Monthly Caps and granular Category Allocations.
-- **Transaction Ledger** – Professional accounting interface for tracking expenses with automated variance analysis.
+- **Treasury Management** – Dual-layer budgeting with Global Monthly Caps and granular Category Allocations.
+- **Institutional Ledger** – Professional accounting interface for tracking expenses with automated variance analysis.
 - **Blockchain Integrity** – Every transaction is hashed using SHA-256 and linked to prevent tampering and ensure auditability.
-- **AI Audit & Advisor** – Intelligent analysis of spending patterns, daily/weekly/monthly limit warnings, and fiscal year compliance.
-- **Wealth Builder** – Automated net savings tracking based on global budget utilization.
+- **Compliance Audit & Advisor** – Intelligent analysis of spending patterns, daily/weekly/monthly threshold warnings, and category shift detection.
+- **Net Savings Tracker** – Automated tracking based on global budget utilization.
 
 ## 🏗️ Project Architecture
 
@@ -17,18 +17,17 @@ FinPilot/
 ├── main.py              # FastAPI Application (API Layer, Routing & AI Logic)
 ├── backend/
 │   ├── database.py      # SQLAlchemy Configuration & Session Management
-│   └── models.py        # Database Schema (Users, Expenses, Budgets)
+│   ├── models.py        # Database Schema & Blockchain Logic
+│   └── routers/         # API Modular Controllers
 ├── frontend/
 │   ├── static/          # Client-side Assets
 │   │   ├── css/         # Professional & Responsive Stylesheets
 │   │   └── js/          # Core Application Logic (app.js)
 │   └── template/
 │       └── index.html   # Main Single-Page Application Template
-├── finpilot.db          # SQLite Database (Default)
-├── main.py              # FastAPI Application (API Layer, Routing & AI Logic)
+├── .env                 # Environment Configuration (Database Path)
 ├── requirements.txt     # Python Dependencies
-├── .env.example         # Environment Config Template
-└── GETTING_STARTED.md   # In-depth Setup & Deployment Guide
+└── README.md            # Project Documentation
 ```
 
 ## 🔧 Technical Specification
@@ -46,7 +45,10 @@ FinPilot/
 # 1. Clone repository and install dependencies
 pip install -r requirements.txt
 
-# 2. Initialize Database & Run Server
+# 2. Configure Environment
+# Ensure .env points to your database (e.g. V:/Projects/Money_management/finpilot.db)
+
+# 3. Initialize Database & Run Server
 python main.py
 ```
 
@@ -57,7 +59,7 @@ The application runs by default at `http://localhost:5500`.
 ### User & Global Budget
 
 - `GET /api/auth/me` – Current profile data
-- `PUT /api/users/{user_id}/budget` – Update **Global Monthly Limit**
+- `PUT /api/auth/profile` – Update User profile and phone number
 
 ### Expenses & Ledger
 
@@ -65,24 +67,24 @@ The application runs by default at `http://localhost:5500`.
 - `GET /api/expenses/` – List ledger entries
 - `DELETE /api/expenses/{id}` – Removal with audit deletion
 
-### Proactive Budgeting
+### Treasury (Budgets)
 
 - `POST /api/budgets/` – Create category allocation
 - `GET /api/budgets/` – Portfolio variance report (Allocated vs. Actual)
 - `DELETE /api/budgets/{id}` – De-allocate funds
 
-### Intelligent Audit
+### Compliance & Analytics
 
 - `GET /api/advisor/dashboard` – Consolidated fiscal health report
-- `GET /api/advisor/recommendations` – Smart AI insights
+- `GET /api/advisor/audit` – Blockchain integrity & anomaly detection
 
 ## 🔐 Compliance & Security
 
 FinPilot treats financial data with high integrity:
 
-1. **Password Security**: Uses PBKDF2 with 100,000 iterations for robust protection.
-2. **Blockchain Verification**: Transactions are immutable; any change to amount or description in the database will invalidate the blockchain hash.
-3. **Budget Variance**: Implements real-time tracking of utilization percentages to prevent over-spending.
+1. **Password Security**: Uses PBKDF2 for robust protection.
+2. **Blockchain Verification**: Transactions are hashed; any unauthorized database modification will invalidate the signature.
+3. **Budget Variance**: Implements real-time tracking of utilization to prevent over-spending.
 
 ## 📝 License
 

@@ -57,6 +57,7 @@ class User(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     is_active = Column(Boolean, default=True)
+    phone_number = Column(String, unique=True, index=True, nullable=True) # For WhatsApp Bot Integration
     monthly_budget_limit = Column(Float, default=0.0) # Global Monthly Budget Cap
 
     # Relationships

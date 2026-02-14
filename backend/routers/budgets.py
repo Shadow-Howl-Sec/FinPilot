@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 from datetime import datetime
 from ..database import get_db
@@ -18,7 +19,7 @@ async def create_budget(budget: BudgetCreate, user_id: int, db: Session = Depend
         user_id=user_id,
         name=budget.name,
         category=budget.category,
-        limit=budget.amount,
+        limit=budget.amount, # amount from schema maps to limit in model
         period=budget.period,
         is_rollover=budget.is_rollover
     )
@@ -27,9 +28,17 @@ async def create_budget(budget: BudgetCreate, user_id: int, db: Session = Depend
     db.commit()
     db.refresh(new_budget)
     
+    # Calculate initial spent (it might not be 0 if expenses already exist for this category)
+    start_of_month = datetime.utcnow().replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+    spent = db.query(Expense).filter(
+        Expense.user_id == user_id,
+        func.lower(Expense.category) == budget.category.lower(),
+        Expense.date >= start_of_month
+    ).with_entities(Expense.amount).all()
+    total_spent = sum(item[0] for item in spent)
+    
     response = BudgetResponse.model_validate(new_budget)
-    response.amount = new_budget.limit
-    response.spent = 0.0
+    response.spent = total_spent
     
     return response
 
@@ -46,10 +55,11 @@ async def get_budgets(user_id: int, db: Session = Depends(get_db)):
     
     response_budgets = []
     for budget in budgets:
-        spent = sum(e.amount for e in current_expenses if e.category.value == budget.category)
+        # Match by Enum value or string, normalized to lowercase
+        target_cat = str(budget.category).lower()
+        spent = sum(e.amount for e in current_expenses if str(e.category.value).lower() == target_cat)
         budget_resp = BudgetResponse.model_validate(budget)
-        budget_resp.spent = spent
-        budget_resp.amount = budget.limit
+        budget_resp.spent = float(spent)
         response_budgets.append(budget_resp)
         
     return response_budgets
@@ -92,10 +102,11 @@ async def update_budget(budget_id: int, budget: BudgetUpdate, user_id: int, db: 
     
     if budget.name is not None:
         db_budget.name = budget.name
-    if budget.limit is not None:
-        db_budget.limit = budget.limit
     if budget.amount is not None:
         db_budget.limit = budget.amount
+    elif budget.limit is not None: # Backup for variations in schema
+        db_budget.limit = budget.limit
+        
     if budget.period is not None:
         db_budget.period = budget.period
     if budget.is_rollover is not None:
@@ -115,7 +126,7 @@ async def update_budget(budget_id: int, budget: BudgetUpdate, user_id: int, db: 
     spent = sum(e.amount for e in current_expenses)
     
     response = BudgetResponse.model_validate(db_budget)
-    response.spent = spent
+    response.spent = float(spent)
     
     return response
 

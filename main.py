@@ -8,7 +8,7 @@ import uvicorn
 from backend.database import init_db
 
 # Import routers
-from backend.routers import auth, expenses, budgets, advisor
+from backend.routers import auth, expenses, budgets, advisor, bot
 
 app = FastAPI(
     title="FinPilot",
@@ -29,6 +29,7 @@ app.include_router(auth.router, prefix="/api")
 app.include_router(expenses.router, prefix="/api")
 app.include_router(budgets.router, prefix="/api")
 app.include_router(advisor.router, prefix="/api")
+app.include_router(bot.router, prefix="/api")
 
 # ==================== HELPER FUNCTION ====================
 

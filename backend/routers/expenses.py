@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 from datetime import datetime, timedelta
 from ..database import get_db
 from ..models import User, Expense, Budget
@@ -50,7 +51,7 @@ async def create_expense(expense: ExpenseCreate, user_id: int, db: Session = Dep
     alerts = []
     category_budget = db.query(Budget).filter(
         Budget.user_id == user_id,
-        Budget.category == expense.category.value
+        func.lower(Budget.category) == expense.category.value.lower()
     ).first()
 
     if category_budget:
@@ -67,7 +68,7 @@ async def create_expense(expense: ExpenseCreate, user_id: int, db: Session = Dep
         daily_total = sum(e.amount for e in daily_expenses)
         
         if daily_total > limit_daily:
-            alerts.append(f"⚠️ Daily Limit Exceeded: You've spent ₹{daily_total:,.2f} on {expense.category.value} today (Limit: ₹{limit_daily:,.2f}).")
+            alerts.append(f"⚠️ Daily Budget Alert: You've spent ₹{daily_total:,.2f} on {expense.category.value} today (Threshold: ₹{limit_daily:,.2f}).")
 
         start_of_week = new_expense.date - timedelta(days=7)
         weekly_expenses = db.query(Expense).filter(
@@ -78,7 +79,7 @@ async def create_expense(expense: ExpenseCreate, user_id: int, db: Session = Dep
         weekly_total = sum(e.amount for e in weekly_expenses)
         
         if weekly_total > limit_weekly:
-             alerts.append(f"⚠️ Weekly Threshold: ₹{weekly_total:,.2f} spent on {expense.category.value} in last 7 days (Target: ₹{limit_weekly:,.2f}).")
+             alerts.append(f"⚠️ Weekly Review: ₹{weekly_total:,.2f} spent on {expense.category.value} in last 7 days (Guide: ₹{limit_weekly:,.2f}).")
     
     response_object = ExpenseResponse.model_validate(new_expense)
     response_object.alerts = alerts
@@ -135,13 +136,21 @@ async def update_expense(expense_id: int, expense: ExpenseUpdate, user_id: int, 
         db_expense.status = expense.status
         
     if should_rehash:
+        # To maintain chain continuity, we must use the actual previous hash
+        prev_exp = db.query(Expense).filter(
+            Expense.user_id == user_id, 
+            Expense.id < db_expense.id
+        ).order_by(Expense.id.desc()).first()
+        
+        actual_previous_hash = prev_exp.blockchain_hash if prev_exp else None
+        
         blockchain_hash = BlockchainVerifier.generate_hash(
             transaction_id=db_expense.id,
             user_id=user_id,
             amount=db_expense.amount,
             description=db_expense.description or "",
             timestamp=db_expense.date,
-            previous_hash="modified"
+            previous_hash=actual_previous_hash
         )
         db_expense.blockchain_hash = blockchain_hash
     

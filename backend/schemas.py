@@ -11,6 +11,7 @@ class UserRegister(BaseModel):
     email: EmailStr
     password: str
     full_name: Optional[str] = None
+    phone_number: Optional[str] = None # Added for WhatsApp onboarding
 
 class UserLogin(BaseModel):
     username: str
@@ -22,8 +23,13 @@ class UserResponse(BaseModel):
     username: str
     email: str
     full_name: str
+    phone_number: Optional[str] = None
     created_at: datetime
     is_active: bool
+
+class UserUpdate(BaseModel):
+    full_name: Optional[str] = None
+    phone_number: Optional[str] = None
 
 # ---- Expense Schemas ----
 class ExpenseCreate(BaseModel):
@@ -53,10 +59,10 @@ class ExpenseResponse(BaseModel):
     category: ExpenseCategory
     description: Optional[str] = None
     date: datetime
-    payment_method: PaymentMethod
+    payment_method: PaymentMethod = PaymentMethod.CASH
     payee: Optional[str] = None
     reference_no: Optional[str] = None
-    status: ExpenseStatus
+    status: ExpenseStatus = ExpenseStatus.CLEARED
     blockchain_hash: Optional[str] = None
     created_at: datetime
     alerts: Optional[List[str]] = []

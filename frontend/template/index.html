@@ -6,6 +6,7 @@
     <title>FinPilot - AI Personal Finance Manager</title>
     <link rel="stylesheet" href="/static/css/style.css" />
     <link rel="stylesheet" href="/static/css/responsive.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
@@ -17,7 +18,7 @@
       <div id="toast-container" class="toast-container"></div>
 
       <!-- Global Loading Overlay -->
-      <div id="loading-overlay" class="loading-overlay" style="display: none;">
+      <div id="loading-overlay" class="loading-overlay" style="display: none">
         <div class="loader"></div>
         <p>Processing fiscal data...</p>
       </div>
@@ -35,23 +36,19 @@
           </div>
           <ul class="nav-menu">
             <li>
-              <a href="#dashboard" onclick="navigate('dashboard')">Dashboard</a>
+              <a href="#dashboard" onclick="navigate('dashboard')">Analytics</a>
             </li>
             <li>
-              <a href="#expenses" onclick="navigate('expenses')">Expenses</a>
+              <a href="#expenses" onclick="navigate('expenses')">Ledger</a>
             </li>
             <li>
-              <a href="#budgets" onclick="navigate('budgets')"
-                >Fiscal Budgeting</a
-              >
+              <a href="#budgets" onclick="navigate('budgets')">Treasury</a>
             </li>
             <li>
-              <a href="#advisor" onclick="navigate('advisor')"
-                >Financial Audit</a
-              >
+              <a href="#advisor" onclick="navigate('advisor')">Compliance</a>
             </li>
             <li>
-              <a href="#profile" onclick="navigate('profile')">Profile</a>
+              <a href="#profile" onclick="navigate('profile')">Account</a>
             </li>
           </ul>
         </div>
@@ -63,16 +60,15 @@
         <div id="landing-page" class="page active">
           <section class="hero">
             <div class="hero-content">
-              <h1 class="hero-title animate-in" style="animation-delay: 0.1s;">
-                Master Your Money with
-                <span class="gradient-text">AI Precision</span>
+              <h1 class="hero-title animate-in">
+                Institutional-Grade <br />
+                <span class="gradient-text">Personal Finance</span>
               </h1>
-              <p class="hero-subtitle animate-in" style="animation-delay: 0.2s;">
-                FinPilot combines professional accounting ledger with blockchain
-                security and AI insights to give you total control over your
-                fiscal future.
+              <p class="hero-subtitle animate-in">
+                FinPilot merges professional accounting standards with AI-driven
+                insights to deliver total fiscal transparency and control.
               </p>
-              <div class="hero-cta animate-in" style="animation-delay: 0.3s;">
+              <div class="hero-cta animate-in" style="animation-delay: 0.3s">
                 <button
                   class="btn btn-primary btn-lg"
                   onclick="navigate('login')"
@@ -87,7 +83,7 @@
                 </button>
               </div>
             </div>
-            <div class="hero-visual animate-in" style="animation-delay: 0.4s;">
+            <div class="hero-visual animate-in" style="animation-delay: 0.4s">
               <img
                 src="/static/img/hero.png"
                 alt="FinPilot Analytics"
@@ -105,7 +101,10 @@
               </p>
             </div>
             <div class="features-grid">
-              <div class="feature-card animate-in" style="animation-delay: 0.1s;">
+              <div
+                class="feature-card animate-in"
+                style="animation-delay: 0.1s"
+              >
                 <div class="feature-icon">🛡️</div>
                 <h3>Blockchain Integrity</h3>
                 <p>
@@ -113,7 +112,10 @@
                   record-keeping for ultimate audit reliability.
                 </p>
               </div>
-              <div class="feature-card animate-in" style="animation-delay: 0.2s;">
+              <div
+                class="feature-card animate-in"
+                style="animation-delay: 0.2s"
+              >
                 <div class="feature-icon">🤖</div>
                 <h3>AI-Powered Audit</h3>
                 <p>
@@ -121,7 +123,10 @@
                   alerts before you breach your limits.
                 </p>
               </div>
-              <div class="feature-card animate-in" style="animation-delay: 0.3s;">
+              <div
+                class="feature-card animate-in"
+                style="animation-delay: 0.3s"
+              >
                 <div class="feature-icon">⚖️</div>
                 <h3>Variance Analysis</h3>
                 <p>
@@ -193,12 +198,12 @@
                 <!-- Login Form -->
                 <form id="login-form">
                   <div class="form-group">
-                    <label for="login-username">Username</label>
+                    <label for="login-username">Username or WhatsApp No.</label>
                     <div class="input-wrapper">
                       <input
                         type="text"
                         id="login-username"
-                        placeholder="e.g. navigator_01"
+                        placeholder="e.g. navigator_01 or +91..."
                         required
                       />
                     </div>
@@ -218,8 +223,16 @@
                     Initialize Session
                   </button>
                 </form>
-                <div class="form-footer" style="margin-top: 20px; text-align: center;">
-                  <p>New to the platform? <a href="#" onclick="navigate('register')">Create Portfolio</a></p>
+                <div
+                  class="form-footer"
+                  style="margin-top: 20px; text-align: center"
+                >
+                  <p>
+                    New to the platform?
+                    <a href="#" onclick="navigate('register')"
+                      >Create Portfolio</a
+                    >
+                  </p>
                 </div>
               </div>
             </div>
@@ -243,7 +256,8 @@
                 </div>
                 <h1 class="brand-tagline">Start Your Legacy.</h1>
                 <p class="brand-description">
-                  Join the ranks of disciplined navigators mastering their wealth.
+                  Join the ranks of disciplined navigators mastering their
+                  wealth.
                 </p>
 
                 <div class="brand-stats">
@@ -299,6 +313,18 @@
                     />
                   </div>
                   <div class="form-group">
+                    <label for="register-phone">WhatsApp Number</label>
+                    <input
+                      type="tel"
+                      id="register-phone"
+                      placeholder="+91..."
+                    />
+                    <small class="text-muted"
+                      >Required for AI Bot interaction (Format:
+                      +919000000000)</small
+                    >
+                  </div>
+                  <div class="form-group">
                     <label for="register-password">Secure Password</label>
                     <input
                       type="password"
@@ -311,8 +337,14 @@
                     Establish Account
                   </button>
                 </form>
-                <div class="form-footer" style="margin-top: 20px; text-align: center;">
-                  <p>Already have a portfolio? <a href="#" onclick="navigate('login')">Sign In</a></p>
+                <div
+                  class="form-footer"
+                  style="margin-top: 20px; text-align: center"
+                >
+                  <p>
+                    Already have a portfolio?
+                    <a href="#" onclick="navigate('login')">Sign In</a>
+                  </p>
                 </div>
               </div>
             </div>
@@ -327,25 +359,51 @@
           </div>
 
           <div class="dashboard-grid">
-            <div class="card animate-in" style="animation-delay: 0.1s;">
+            <div class="card animate-in" style="animation-delay: 0.1s">
               <h3>This Month's Spending</h3>
               <p class="amount" id="monthly-spending">₹0.00</p>
               <p class="text-muted">Based on current trends</p>
             </div>
 
-            <div class="card animate-in" style="animation-delay: 0.2s;">
+            <div class="card animate-in" style="animation-delay: 0.2s">
               <h3>Average Daily Spend</h3>
               <p class="amount" id="daily-spending">₹0.00</p>
               <p class="text-muted">Last 30 days</p>
             </div>
 
-            <div class="card full-width animate-in" style="animation-delay: 0.3s;">
-              <h3>Wealth Builder & Savings History</h3>
-              <div class="savings-history-container">
+            <div
+              class="card full-width animate-in"
+              style="animation-delay: 0.3s"
+            >
+              <h3>Wealth Building & Savings History</h3>
+              <div class="dashboard-analytics-grid">
+                <div
+                  class="chart-container"
+                  style="position: relative; height: 300px; width: 100%"
+                >
+                  <canvas id="trendChart"></canvas>
+                </div>
+                <div
+                  class="chart-container"
+                  style="position: relative; height: 300px; width: 100%"
+                >
+                  <canvas id="distributionChart"></canvas>
+                </div>
+              </div>
+              <div
+                class="savings-history-container"
+                style="
+                  margin-top: 2rem;
+                  border-top: 1px solid var(--border-subtle);
+                  padding-top: 1.5rem;
+                "
+              >
                 <div class="savings-stat-big">
                   <span class="label">Net Savings This Month</span>
                   <span class="value" id="net-savings">₹0.00</span>
-                  <span class="sub" id="global-limit-display">Target: ₹0.00</span>
+                  <span class="sub" id="global-limit-display"
+                    >Target: ₹0.00</span
+                  >
                 </div>
                 <div class="savings-stat-big">
                   <span class="label">Total Wealth Built</span>
@@ -359,7 +417,7 @@
             </div>
           </div>
 
-          <div class="card full-width animate-in" style="animation-delay: 0.4s;">
+          <div class="card full-width animate-in" style="animation-delay: 0.4s">
             <h3>AI Recommendations</h3>
             <div id="recommendations-list" class="recommendations">
               <p class="text-muted">Loading recommendations...</p>
@@ -391,20 +449,36 @@
               "
             >
               <h4>
-                Category Intelligence: <span id="limit-category-name" class="gradient-text">-</span>
+                Category Intelligence:
+                <span id="limit-category-name" class="gradient-text">-</span>
               </h4>
               <div style="display: flex; gap: 3rem; margin-top: 1rem">
                 <div>
                   <small class="text-muted">Daily Limit</small>
-                  <div style="font-weight: 700; font-size: 1.2rem;" id="limit-daily">₹0.00</div>
+                  <div
+                    style="font-weight: 700; font-size: 1.2rem"
+                    id="limit-daily"
+                  >
+                    ₹0.00
+                  </div>
                 </div>
                 <div>
                   <small class="text-muted">Weekly Limit</small>
-                  <div style="font-weight: 700; font-size: 1.2rem;" id="limit-weekly">₹0.00</div>
+                  <div
+                    style="font-weight: 700; font-size: 1.2rem"
+                    id="limit-weekly"
+                  >
+                    ₹0.00
+                  </div>
                 </div>
                 <div>
                   <small class="text-muted">Monthly Limit</small>
-                  <div style="font-weight: 700; font-size: 1.2rem;" id="limit-monthly">₹0.00</div>
+                  <div
+                    style="font-weight: 700; font-size: 1.2rem"
+                    id="limit-monthly"
+                  >
+                    ₹0.00
+                  </div>
                 </div>
               </div>
             </div>
@@ -435,7 +509,9 @@
                     <option value="food">🍔 Food & Provisions</option>
                     <option value="transport">🚗 Logistics</option>
                     <option value="utilities">💡 Utilities/Overhead</option>
-                    <option value="entertainment">🎬 Leisure/Entertainment</option>
+                    <option value="entertainment">
+                      🎬 Leisure/Entertainment
+                    </option>
                     <option value="health">🏥 Medical/Health</option>
                     <option value="shopping">🛍️ Discretionary/Shopping</option>
                     <option value="education">📚 Education/Training</option>
@@ -444,7 +520,11 @@
                 </div>
                 <div class="form-group">
                   <label for="expense-payee">Payee / Vendor</label>
-                  <input type="text" id="expense-payee" placeholder="e.g. Amazon, Landlord" />
+                  <input
+                    type="text"
+                    id="expense-payee"
+                    placeholder="e.g. Amazon, Landlord"
+                  />
                 </div>
               </div>
               <div class="form-row">
@@ -459,7 +539,11 @@
                 </div>
                 <div class="form-group">
                   <label for="expense-ref">Reference No.</label>
-                  <input type="text" id="expense-ref" placeholder="Bill/Receipt #" />
+                  <input
+                    type="text"
+                    id="expense-ref"
+                    placeholder="Bill/Receipt #"
+                  />
                 </div>
               </div>
               <div class="form-group">
@@ -482,22 +566,32 @@
               <thead>
                 <tr>
                   <th>Date</th>
-                  <th>Cost Center</th>
+                  <th>Reference</th>
+                  <th>Payee</th>
+                  <th>Category</th>
                   <th>Narration</th>
-                  <th>Amount</th>
-                  <th>Action</th>
+                  <th>Method</th>
+                  <th>Status</th>
+                  <th class="text-right">Amount</th>
+                  <th class="text-center">Action</th>
                 </tr>
               </thead>
               <tbody id="expenses-list">
                 <tr>
-                  <td colspan="5" class="text-muted">
+                  <td colspan="9" class="text-muted">
                     No transactions recorded. Add entry to initialize ledger.
                   </td>
                 </tr>
               </tbody>
               <tfoot>
-                <tr style="font-weight: bold; background: #f8fafc">
-                  <td colspan="3" class="text-right">Total Debit:</td>
+                <tr
+                  style="
+                    font-weight: bold;
+                    background: var(--bg-surface);
+                    color: var(--text-main);
+                  "
+                >
+                  <td colspan="7" class="text-right">Total Debit:</td>
                   <td class="font-mono" id="ledger-total">₹0.00</td>
                   <td></td>
                 </tr>
@@ -563,12 +657,19 @@
                 </div>
                 <div class="form-group">
                   <label for="budget-category">Category</label>
-                  <input
-                    type="text"
-                    id="budget-category"
-                    placeholder="e.g., Food"
-                    required
-                  />
+                  <select id="budget-category" required>
+                    <option value="">Select Category</option>
+                    <option value="food">🍔 Food & Provisions</option>
+                    <option value="transport">🚗 Logistics</option>
+                    <option value="utilities">💡 Utilities/Overhead</option>
+                    <option value="entertainment">
+                      🎬 Leisure/Entertainment
+                    </option>
+                    <option value="health">🏥 Medical/Health</option>
+                    <option value="shopping">🛍️ Discretionary/Shopping</option>
+                    <option value="education">📚 Education/Training</option>
+                    <option value="other">📌 Miscellaneous</option>
+                  </select>
                 </div>
               </div>
               <div class="form-row">
@@ -685,6 +786,84 @@
           </div>
         </div>
 
+        <!-- Financial Audit Page -->
+        <div id="audit-page" class="page">
+          <div class="page-header">
+            <h1>Financial Audit & Integrity</h1>
+            <button class="btn btn-primary" onclick="loadAuditData()">
+              Run New Scan
+            </button>
+          </div>
+
+          <div class="dashboard-grid">
+            <div class="card animate-in" style="animation-delay: 0.1s">
+              <h3>System Integrity</h3>
+              <div id="audit-integrity-status" class="status-indicator">
+                <span class="pulse-icon"></span>
+                <span class="status-text">Scanning...</span>
+              </div>
+              <p class="text-muted" id="audit-integrity-detail">
+                Verifying blockchain hashes...
+              </p>
+            </div>
+
+            <div class="card animate-in" style="animation-delay: 0.2s">
+              <h3>Compliance Score</h3>
+              <p class="amount" id="audit-compliance-score">--</p>
+              <p class="text-muted" id="audit-compliance-status">
+                Pending metadata audit
+              </p>
+            </div>
+          </div>
+
+          <div class="card animate-in" style="animation-delay: 0.3s">
+            <h3>Anomaly Detection Report</h3>
+            <div class="table-container">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Type</th>
+                    <th>Severity</th>
+                    <th>Details</th>
+                    <th>Recommendation</th>
+                  </tr>
+                </thead>
+                <tbody id="audit-anomalies-list">
+                  <tr>
+                    <td colspan="4" class="text-center text-muted">
+                      No anomalies detected yet. Run a scan to begin.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card animate-in" style="animation-delay: 0.4s">
+            <h3>Tampered Records (Blockchain Failure)</h3>
+            <div class="table-container">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>Category</th>
+                    <th>Description</th>
+                  </tr>
+                </thead>
+                <tbody id="audit-tampered-list">
+                  <tr>
+                    <td colspan="5" class="text-center text-success">
+                      All records verified. Blockchain integrity is 100%.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
         <!-- Profile Page -->
         <div id="profile-page" class="page">
           <div class="page-header">
@@ -706,6 +885,38 @@
                 <span id="profile-joined">-</span>
               </p>
             </div>
+          </div>
+
+          <div class="card">
+            <h3>Update Profile</h3>
+            <form
+              id="profile-form"
+              onsubmit="
+                event.preventDefault();
+                updateProfile();
+              "
+            >
+              <div class="form-group">
+                <label for="profile-name-input">Full Name</label>
+                <input
+                  type="text"
+                  id="profile-name-input"
+                  placeholder="Your Name"
+                />
+              </div>
+              <div class="form-group">
+                <label for="profile-phone-input">WhatsApp Number</label>
+                <input
+                  type="tel"
+                  id="profile-phone-input"
+                  placeholder="+91..."
+                />
+                <small class="text-muted">Format: +919000000000</small>
+              </div>
+              <button type="submit" class="btn btn-primary">
+                Save Changes
+              </button>
+            </form>
           </div>
 
           <div class="card">
